@@ -1,6 +1,4 @@
-# mobile_chat_app
-
-A new Flutter project.
+# Mobile Chat Apps using Flutter
 
 ## Getting Started
 
