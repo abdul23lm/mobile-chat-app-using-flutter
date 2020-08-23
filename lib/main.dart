@@ -1,3 +1,4 @@
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:mobilechatapp/ui/chat_screen.dart';
 import 'package:mobilechatapp/ui/sign_in_screen.dart';
@@ -16,7 +17,19 @@ class MyApp extends StatelessWidget {
         primarySwatch: Colors.blue,
         visualDensity: VisualDensity.adaptivePlatformDensity,
       ),
-      home: ChatScreen(),
+      home: SignInScreen(),
+      builder: (BuildContext context, Widget screen) {
+        return FutureBuilder<FirebaseApp>(
+          future: Firebase.initializeApp(),
+          builder: (BuildContext context, AsyncSnapshot<FirebaseApp> snapshot) {
+            if (snapshot.connectionState == ConnectionState.done) {
+              return screen;
+            } else {
+              return Container();
+            }
+          },
+        );
+      },
     );
   }
 }

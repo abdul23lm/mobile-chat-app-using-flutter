@@ -8,6 +8,28 @@ class SignInScreen extends StatefulWidget {
 }
 
 class _SignInScreenState extends State<SignInScreen> {
+  // controllers
+
+  final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _passwordController = TextEditingController();
+
+  // focus mode
+  final FocusNode _emailNode = FocusNode();
+  final FocusNode _passwordNode = FocusNode();
+
+  // state
+  bool _isLoading = false;
+
+  @override
+  void dispose() {
+    _emailController.dispose();
+    _passwordController.dispose();
+    _emailNode.dispose();
+    _passwordNode.dispose();
+
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -39,7 +61,7 @@ class _SignInScreenState extends State<SignInScreen> {
             Align(
                 alignment: Alignment.center,
                 child: RaisedButton(
-                  onPressed: () {},
+                  onPressed: _isLoading ? null : () {},
                   child: Text('Masuk'),
                 ))
           ],
