@@ -1,4 +1,5 @@
 // stful
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
@@ -10,7 +11,8 @@ class SignInScreen extends StatefulWidget {
 class _SignInScreenState extends State<SignInScreen> {
   // controllers
 
-  final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _emailController =
+      TextEditingController(text: 'user1@email.com');
   final TextEditingController _passwordController = TextEditingController();
 
   // focus mode
@@ -61,12 +63,22 @@ class _SignInScreenState extends State<SignInScreen> {
             Align(
                 alignment: Alignment.center,
                 child: RaisedButton(
-                  onPressed: _isLoading ? null : () {},
+                  onPressed: _isLoading ? null : _onSignIn,
                   child: Text('Masuk'),
                 ))
           ],
         ),
       ),
+    );
+  }
+
+  void _onSignIn() {
+    final String email = _emailController.text;
+    final String password = _passwordController.text;
+
+    FirebaseAuth.instance.signInWithEmailAndPassword(
+      email: email,
+      password: password,
     );
   }
 }
