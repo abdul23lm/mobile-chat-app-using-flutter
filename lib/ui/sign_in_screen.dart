@@ -2,6 +2,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:mobilechatapp/ui/chat_screen.dart';
 
 class SignInScreen extends StatefulWidget {
   @override
@@ -13,7 +14,8 @@ class _SignInScreenState extends State<SignInScreen> {
 
   final TextEditingController _emailController =
       TextEditingController(text: 'user1@email.com');
-  final TextEditingController _passwordController = TextEditingController();
+  final TextEditingController _passwordController =
+      TextEditingController(text: '123456');
 
   // focus mode
   final FocusNode _emailNode = FocusNode();
@@ -49,7 +51,7 @@ class _SignInScreenState extends State<SignInScreen> {
               style: TextStyle(fontWeight: FontWeight.w600),
             ),
             TextField(
-              decoration: InputDecoration(hintText: 'Masukkan email anda'),
+              decoration: InputDecoration(hintText: 'Masukkan email'),
             ),
             Text(
               'Password',
@@ -72,13 +74,25 @@ class _SignInScreenState extends State<SignInScreen> {
     );
   }
 
-  void _onSignIn() {
+  Future<void> _onSignIn() async {
     final String email = _emailController.text;
     final String password = _passwordController.text;
 
-    FirebaseAuth.instance.signInWithEmailAndPassword(
-      email: email,
-      password: password,
-    );
+    try {
+      final UserCredential credential =
+          await FirebaseAuth.instance.signInWithEmailAndPassword(
+        email: email,
+        password: password,
+      );
+
+      if (credential != null) {
+        Navigator.pushAndRemoveUntil(context,
+            MaterialPageRoute(builder: (BuildContext context) {
+          return ChatScreen();
+        }), (route) => false);
+      }
+    } catch (e) {
+      print(e);
+    }
   }
 }
