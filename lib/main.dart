@@ -19,6 +19,7 @@ class MyApp extends StatelessWidget {
   }
 }
 
+// stful
 class SignInScreen extends StatefulWidget {
   @override
   _SignInScreenState createState() => _SignInScreenState();
@@ -27,6 +28,27 @@ class SignInScreen extends StatefulWidget {
 class _SignInScreenState extends State<SignInScreen> {
   @override
   Widget build(BuildContext context) {
-    return Container();
+    return Scaffold(
+      appBar: AppBar(
+        centerTitle: true,
+        title: Text('Sign In'),
+      ),
+      body: Column(
+        children: [
+          Text('Email'),
+          TextField(
+            decoration: InputDecoration(hintText: 'Masukkan email anda'),
+          ),
+          Text('Password'),
+          TextField(
+            decoration: InputDecoration(hintText: 'Masukkan kata sandi'),
+          ),
+          RaisedButton(
+            onPressed: () {},
+            child: Text('Masuk'),
+          )
+        ],
+      ),
+    );
   }
 }
