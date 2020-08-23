@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:mobilechatapp/ui/chat_screen.dart';
 import 'package:mobilechatapp/ui/sign_in_screen.dart';
 
 void main() {
@@ -15,7 +16,7 @@ class MyApp extends StatelessWidget {
         primarySwatch: Colors.blue,
         visualDensity: VisualDensity.adaptivePlatformDensity,
       ),
-      home: SignInScreen(),
+      home: ChatScreen(),
     );
   }
 }
