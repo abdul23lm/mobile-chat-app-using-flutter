@@ -1,32 +1,31 @@
 import 'package:firebase_core/firebase_core.dart';
+import 'package:mobilechatapp/router.dart';
 import 'package:flutter/material.dart';
-import 'package:mobilechatapp/ui/chat_screen.dart';
-import 'package:mobilechatapp/ui/sign_in_screen.dart';
 
 void main() {
   runApp(MyApp());
 }
 
 class MyApp extends StatelessWidget {
-  // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Mobile Chat App using Flutter',
+      title: 'Mobile Chat using Flutter',
       theme: ThemeData(
-        primarySwatch: Colors.blue,
+        primarySwatch: Colors.teal,
         visualDensity: VisualDensity.adaptivePlatformDensity,
       ),
-      home: SignInScreen(),
-      builder: (BuildContext context, Widget screen) {
+      initialRoute: Router.initialRoute,
+      routes: Router.routes,
+      builder: (BuildContext context, Widget widget) {
         return FutureBuilder<FirebaseApp>(
           future: Firebase.initializeApp(),
           builder: (BuildContext context, AsyncSnapshot<FirebaseApp> snapshot) {
             if (snapshot.connectionState == ConnectionState.done) {
-              return screen;
-            } else {
-              return Container();
+              return widget;
             }
+
+            return Scaffold();
           },
         );
       },
