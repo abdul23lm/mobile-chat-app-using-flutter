@@ -17,16 +17,16 @@ class _ChatScreenState extends State<ChatScreen> {
   final DatabaseReference root = FirebaseDatabase.instance.reference();
   final User user = FirebaseAuth.instance.currentUser;
 
-  @override
-  void initState() {
-    final DatabaseReference chatReference =
-        root.child('/chats/${user.uid}/chats').reference();
+  // @override
+  // void initState() {
+  //   final DatabaseReference chatReference =
+  //       root.child('/chats/${user.uid}/chats').reference();
 
-    chatReference.onValue.listen((event) {
-      print(event.snapshot.value);
-    });
-    super.initState();
-  }
+  //   chatReference.onValue.listen((event) {
+  //     print(event.snapshot.value);
+  //   });
+  //   super.initState();
+  // }
 
   @override
   void dispose() {
@@ -38,6 +38,9 @@ class _ChatScreenState extends State<ChatScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final DatabaseReference chatReference =
+        root.child('/chats/${user.uid}/chats').reference();
+
     return Scaffold(
       appBar: AppBar(
         title: Text('Chat'),
@@ -62,7 +65,32 @@ class _ChatScreenState extends State<ChatScreen> {
       body: SafeArea(
         child: Column(
           children: [
-            Expanded(child: Placeholder()),
+            Expanded(
+              child: StreamBuilder(
+                stream: chatReference.onValue,
+                builder: (BuildContext contect, AsyncSnapshot<Event> snapshot) {
+                  if (snapshot.hasData &&
+                      snapshot.connectionState == ConnectionState.active) {
+                    final Map<dynamic, dynamic> data =
+                        snapshot.data.snapshot.value;
+
+                    if (data != null) {
+                      final List<dynamic> chatList = data.values.toList();
+
+                      return ListView.builder(
+                        reverse: true,
+                        itemBuilder: (BuildContext contex, int index) {
+                          return Text(
+                              data.values.toList()[index]['text'].toString());
+                        },
+                        itemCount: data.values.length,
+                      );
+                    }
+                  }
+                  return Container();
+                },
+              ),
+            ),
             Row(
               children: [
                 Expanded(
@@ -96,7 +124,7 @@ class _ChatScreenState extends State<ChatScreen> {
       final String receiver = sender.uid == 'ecIvrKTpg3PwfzGm4b7ORQTrj6F3'
           ? 'zBLOguWRlISvI5YTiq6cnpIhLB22'
           : 'ecIvrKTpg3PwfzGm4b7ORQTrj6F3';
-      final DatabaseReference root = FirebaseDatabase.instance.reference();
+
       final DatabaseReference chats =
           root.child('/chats/${sender.uid}/chats').reference();
 
