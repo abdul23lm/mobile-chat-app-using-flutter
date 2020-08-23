@@ -2,6 +2,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
 import 'package:mobilechatapp/ui/chat_screen.dart';
 
 class SignInScreen extends StatefulWidget {
@@ -23,6 +24,25 @@ class _SignInScreenState extends State<SignInScreen> {
 
   // state
   bool _isLoading = false;
+
+  @override
+  void initState() {
+    SchedulerBinding.instance.addPostFrameCallback((timeStamp) {
+      final User user = FirebaseAuth.instance.currentUser;
+
+      if (user != null) {
+        Navigator.pushAndRemoveUntil(
+          context,
+          MaterialPageRoute(builder: (BuildContext context) {
+            return ChatScreen();
+          }),
+          (route) => false,
+        );
+      }
+    });
+
+    super.initState();
+  }
 
   @override
   void dispose() {
@@ -51,6 +71,8 @@ class _SignInScreenState extends State<SignInScreen> {
               style: TextStyle(fontWeight: FontWeight.w600),
             ),
             TextField(
+              controller: _emailController,
+              focusNode: _passwordNode,
               decoration: InputDecoration(hintText: 'Masukkan email'),
             ),
             Text(
@@ -58,6 +80,8 @@ class _SignInScreenState extends State<SignInScreen> {
               style: TextStyle(fontWeight: FontWeight.w600),
             ),
             TextField(
+              controller: _passwordController,
+              focusNode: _passwordNode,
               obscureText: true,
               decoration: InputDecoration(hintText: 'Masukkan kata sandi'),
             ),
@@ -79,6 +103,10 @@ class _SignInScreenState extends State<SignInScreen> {
     final String password = _passwordController.text;
 
     try {
+      setState(() {
+        _isLoading = false;
+      });
+
       final UserCredential credential =
           await FirebaseAuth.instance.signInWithEmailAndPassword(
         email: email,
@@ -86,13 +114,18 @@ class _SignInScreenState extends State<SignInScreen> {
       );
 
       if (credential != null) {
-        Navigator.pushAndRemoveUntil(context,
-            MaterialPageRoute(builder: (BuildContext context) {
-          return ChatScreen();
-        }), (route) => false);
+        Navigator.pushAndRemoveUntil(
+          context,
+          MaterialPageRoute(builder: (BuildContext context) {
+            return ChatScreen();
+          }),
+          (route) => false,
+        );
       }
     } catch (e) {
-      print(e);
+      setState(() {
+        _isLoading = false;
+      });
     }
   }
 }
