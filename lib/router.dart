@@ -9,6 +9,7 @@ class Router {
   static Map<String, WidgetBuilder> routes = <String, WidgetBuilder>{
     SignInScreen.routeName: (_) => SignInScreen(),
     ChatScreen.routeName: (_) => ChatScreen(),
+        SessionScreen.routeName: (_) => SessionScreen(),
 
   };
 }
